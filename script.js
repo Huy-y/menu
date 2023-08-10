@@ -26,7 +26,7 @@ function createFoodItemCard(item) {
         "border-2",
         "menu-item",
         "bg-white",
-        "rounded",
+        "rounded-2xl",
         "p-4",
         "shadow-md"
     );
@@ -57,15 +57,16 @@ function createFoodItemCard(item) {
     const quantityContainer = document.createElement("div");
     quantityContainer.classList.add("quantity", "mt-2");
     const decreaseBtn = document.createElement("button");
-    decreaseBtn.textContent = "-";
     decreaseBtn.classList.add(
+        "fas",
+        "fa-minus",
         "btn-quantity",
         "bg-red-500",
         "text-white",
         "px-2",
-        "py-1",
+        "py-2",
         "rounded",
-        "mr-4"
+        "mr-4",
     );
     decreaseBtn.onclick = () => decreaseQuantity(item, card);
 
@@ -73,13 +74,14 @@ function createFoodItemCard(item) {
     quantityValue.textContent = "0";
     quantityValue.classList.add("item-quantity");
     const increaseBtn = document.createElement("button");
-    increaseBtn.textContent = "+";
     increaseBtn.classList.add(
+        "fas",
+        "fa-plus",
         "btn-quantity",
         "bg-green-500",
         "text-white",
         "px-2",
-        "py-1",
+        "py-2",
         "rounded",
         "ml-4"
     );
@@ -111,7 +113,7 @@ function createDrinkItemCard(item) {
         "border-2",
         "menu-item",
         "bg-white",
-        "rounded",
+        "rounded-2xl",
         "p-4",
         "shadow-md"
     );
@@ -141,13 +143,14 @@ function createDrinkItemCard(item) {
     const quantityContainer = document.createElement("div");
     quantityContainer.classList.add("quantity", "mt-2");
     const decreaseBtn = document.createElement("button");
-    decreaseBtn.textContent = "-";
     decreaseBtn.classList.add(
+        "fas",
+        "fa-minus",
         "btn-quantity",
         "bg-red-500",
         "text-white",
         "px-2",
-        "py-1",
+        "py-2",
         "rounded",
         "mr-4"
     );
@@ -157,13 +160,14 @@ function createDrinkItemCard(item) {
     quantityValue.textContent = "0";
     quantityValue.classList.add("item-quantity");
     const increaseBtn = document.createElement("button");
-    increaseBtn.textContent = "+";
     increaseBtn.classList.add(
+        "fas",
+        "fa-plus",
         "btn-quantity",
         "bg-green-500",
         "text-white",
         "px-2",
-        "py-1",
+        "py-2",
         "rounded",
         "ml-4"
     );
@@ -468,12 +472,17 @@ let isDarkMode = false;
 function toggleTheme() {
     const body = document.body;
     const tab = document.getElementById("tab");
+    const icon = document.getElementById("theme-icon")
     if (isDarkMode) {
         body.classList.remove("dark-mode");
         tab.classList.remove("dark-mode");
+        icon.classList.remove("fa-moon");
+        icon.classList.add("fa-sun");
     } else {
         body.classList.add("dark-mode");
         tab.classList.add("dark-mode");
+        icon.classList.remove("fa-sun");
+        icon.classList.add("fa-moon");
     }
     isDarkMode = !isDarkMode;
 }
