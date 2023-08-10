@@ -57,6 +57,18 @@ body {
     border-color: #ffcc00;
 }
 
+.dark-mode .waiter {
+    color: #fff;
+    background-color: #333c47;
+    border-color: #ffcc00;
+}
+
+.dark-mode .cart {
+    color: #fff;
+    background-color: #333c47;
+    border-color: #ffcc00;
+}
+
 .dark-mode .menu-item {
     background-color: #333c47;
     color: #fff;
