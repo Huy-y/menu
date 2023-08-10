@@ -356,7 +356,7 @@ function showCart() {
             showCancelButton: true,
             focusConfirm: false,
             confirmButtonText: "Thanh toán",
-            cancelButtonText: "Tiếp tục mua sắm",
+            cancelButtonText: "Mua tiếp",
             customClass: {
                 content: 'small-swal-content'
             }
