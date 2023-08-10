@@ -7,21 +7,22 @@
     <title>Gọi đồ ăn</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body class="p-4">
     <div class="app-container">
-        <h1 class="text-center text-2xl font-bold">Menu thiên đàng</h1>
+        <h1 class="text-center text-3xl m-2 font-bold">Quán ăn vỉa hè</h1>
         <button class="fixed top-4 right-4 btn-call-waiter bg-blue-500 text-white px-2.5 py-2 rounded-full"
-            id="callWaiter">
-            <i class="fas fa-phone-alt" id="callWaiter"></i>
+            id="callWaiterBtn">
+            <i class="fas fa-phone-alt"></i>
         </button>
 
         <div class="tabs grid-cols-4 text-center border-2 bg-blue-500 rounded-lg mt-8 mb-4 text-white">
-            <button class="font-semibold px-11 md:px-36 my-1  tab-button active" onclick="changeTab('food')">Đồ
+            <button class="font-semibold px-11 md:px-24  my-1  tab-button active" data-tab="food">Đồ
                 ăn</button>
-            <button class="font-semibold px-11 md:px-36 tab-button" onclick="changeTab('drink')">Nước</button>
+            <button class="font-semibold px-11 md:px-24 tab-button" data-tab="drink">Nước</button>
         </div>
 
         <div id="foodTab" class="menu-items grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -32,14 +33,14 @@
             <!-- Danh sách nước uống sẽ được thêm bằng JavaScript -->
         </div>
 
-        <!-- <div class="cart">
-            <button class="btn-cart bg-red-500 text-white py-2 px-4 rounded" id="viewCart">
-                <i class="fas fa-shopping-cart mr-2"></i>
+        <div class="fixed bottom-4 right-4 bg-white p-2 rounded-full shadow-md">
+            <button id="cartBtn" class="text-xl text-blue-500" onclick="showCart()">
+                <i class="fas fa-shopping-cart"></i>
             </button>
-        </div> -->
-    </div>
+        </div>
 
-    <script src="script.js"></script>
+        <script src="script.js"></script>
+    </div>
 </body>
 
 </html>

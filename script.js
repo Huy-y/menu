@@ -42,9 +42,11 @@ function createFoodItemCard(item) {
     itemInfo.appendChild(itemName);
 
     const itemPrice = document.createElement("p");
-    itemPrice.textContent = `Giá: ${item.price} VNĐ`;
+    const formattedPrice = item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    itemPrice.textContent = `Giá: ${formattedPrice} VNĐ`;
     itemPrice.classList.add("item-price", "text-gray-600", "mt-2");
     itemInfo.appendChild(itemPrice);
+
 
     const quantityContainer = document.createElement("div");
     quantityContainer.classList.add("quantity", "mt-2");
@@ -177,12 +179,25 @@ drinkItems.forEach((item) => {
     drinkTab.appendChild(card);
 });
 
-// Hàm thêm món vào giỏ hàng
-function addToCart(name, price) {
+// Hàm để thêm món vào giỏ hàng
+function addToCart(name, price, quantity) {
     const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-    cartItems.push({ name, price });
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
-    alert("Đã thêm vào giỏ hàng!");
+
+    // Kiểm tra xem món hàng đã tồn tại trong giỏ hàng chưa
+    const existingItem = cartItems.find(item => item.name === name);
+    if (existingItem) {
+        // Nếu tồn tại rồi, cập nhật số lượng
+        existingItem.quantity += quantity;
+    } else {
+        // Nếu chưa tồn tại, thêm mới món hàng vào giỏ hàng
+        cartItems.push({ name, price, quantity });
+    }
+
+    // Loại bỏ các món hàng có số lượng là 0
+    const updatedCartItems = cartItems.filter(item => item.quantity > 0);
+
+    // Cập nhật giỏ hàng trong localStorage
+    localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
 }
 
 // Hàm chuyển giữa các tab
@@ -193,57 +208,213 @@ function changeTab(tabName) {
     const tabContent = document.querySelectorAll(".menu-items");
     tabContent.forEach((content) => content.classList.add("hidden"));
 
-    if (tabName === "food") {
-        document.getElementById("foodTab").classList.remove("hidden");
-        document.querySelector("button[data-tab='food']").classList.add("active");
-    } else if (tabName === "drink") {
-        document.getElementById("drinkTab").classList.remove("hidden");
-        document.querySelector("button[data-tab='drink']").classList.add("active");
+    const tabToShow = document.getElementById(`${tabName}Tab`);
+    tabToShow.classList.remove("hidden");
+
+    const activeTabBtn = document.querySelector(`button[data-tab='${tabName}']`);
+    if (activeTabBtn) {
+        activeTabBtn.classList.add("active");
     }
 }
+
+// Bắt sự kiện nhấn nút "Đồ ăn"
+const foodTabBtn = document.querySelector("button[data-tab='food']");
+foodTabBtn.onclick = function () {
+    changeTab("food");
+};
+
+// Bắt sự kiện nhấn nút "Nước"
+const drinkTabBtn = document.querySelector("button[data-tab='drink']");
+drinkTabBtn.onclick = function () {
+    changeTab("drink");
+};
 
 // Mặc định hiển thị tab "Đồ ăn"
 changeTab("food");
 
-// Hàm tăng số lượng món đồ ăn
+// Các nút tăng giảm
 function increaseQuantity(item, card) {
-    const quantityElement = button.parentElement.querySelector(".item-quantity");
-    let quantity = parseInt(quantityElement.textContent, 10);
+    const quantityValue = card.querySelector(".item-quantity");
+    let quantity = parseInt(quantityValue.textContent);
     quantity++;
-    quantityElement.textContent = quantity.toString();
+    quantityValue.textContent = quantity.toString();
+
+    addToCart(item.name, item.price, 1); // Thêm 1 vào giỏ hàng
 }
 
-// Hàm giảm số lượng món đồ ăn
 function decreaseQuantity(item, card) {
-    const quantityElement = button.parentElement.querySelector(".item-quantity");
-    let quantity = parseInt(quantityElement.textContent, 10);
+    const quantityValue = card.querySelector(".item-quantity");
+    let quantity = parseInt(quantityValue.textContent);
     if (quantity > 0) {
         quantity--;
-        quantityElement.textContent = quantity.toString();
+        quantityValue.textContent = quantity.toString();
+        addToCart(item.name, item.price, -1); // Trừ 1 khỏi giỏ hàng
+    }
+    // Đặt lại số lượng thành 0 nếu số lượng đã giảm xuống 0
+    if (quantity === 0) {
+        quantityValue.textContent = "0";
+        addToCart(item.name, item.price, -1); // Trừ 1 khỏi giỏ hàng
     }
 }
 
-// Gọi nhân viên (sử dụng SweetAlert2)
-document.getElementById("callWaiter").addEventListener("click", () => {
+function resetCart() {
+    const quantityValues = document.querySelectorAll(".item-quantity");
+    quantityValues.forEach(quantityValue => {
+        quantityValue.textContent = "0";
+    });
+
+    localStorage.removeItem("cartItems");
+}
+
+// Hàm để gọi nhân viên
+function callWaiter() {
     Swal.fire({
+        title: "Vui lòng chờ",
+        text: "Nhân viên đang tới chỗ bạn.",
         icon: "info",
-        title: "Gọi nhân viên",
-        text: "Nhân viên sẽ đến ngay!",
+        confirmButtonText: "OK"
     });
-});
+}
 
-// Xem giỏ hàng (sử dụng SweetAlert2)
-document.getElementById("viewCart").addEventListener("click", () => {
-    const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-    let cartContent = "<ul>";
-    cartItems.forEach((item) => {
-        cartContent += `<li>${item.name} - ${item.price} VNĐ</li>`;
+// Bắt sự kiện nhấn nút "Gọi nhân viên"
+const callWaiterBtn = document.getElementById("callWaiterBtn");
+callWaiterBtn.onclick = callWaiter;
+
+// Hàm để tạo nội dung của giỏ hàng
+function generateCartHTML(cartItems) {
+    let cartHTML = '<table class="cart-table">';
+    cartHTML += '<tr><th>Tên món</th><th>Số lượng</th><th>Tổng giá</th></tr>';
+
+    let totalAmount = 0;
+
+    cartItems.forEach(item => {
+        const formattedPrice = item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        const formattedTotalPrice = (item.price * item.quantity).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        cartHTML += `
+            <tr>
+                <td>${item.name}</td>
+                <td>${item.quantity}</td>
+                <td>${formattedTotalPrice} VNĐ</td>
+            </tr>
+        `;
+        totalAmount += item.price * item.quantity;
     });
-    cartContent += "</ul>";
+
+    const formattedTotalAmount = totalAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    cartHTML += '</table>';
+    cartHTML += `<p class="total-amount">Tổng cộng: ${formattedTotalAmount} VNĐ</p>`;
+
+    return cartHTML;
+}
+
+function updateCartUI() {
+    const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+
+    cartItems.forEach(item => {
+        const itemRow = document.querySelector(`[data-item="${item.name}"]`);
+        if (itemRow) {
+            const quantityValue = itemRow.querySelector(".item-quantity");
+            if (quantityValue) {
+                quantityValue.textContent = item.quantity.toString();
+            }
+        }
+    });
+}
+
+// Bắt sự kiện nhấn nút "Giỏ hàng" để hiển thị giỏ hàng
+const cartBtn = document.getElementById("cartBtn");
+cartBtn.addEventListener("click", showCart);
+
+// Hàm để hiển thị giỏ hàng và bảng thanh toán
+function showCart() {
+    const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+
+    if (cartItems.length === 0) {
+        Swal.fire({
+            title: "Giỏ hàng trống",
+            text: "Không có món hàng trong giỏ hàng.",
+            icon: "info",
+            confirmButtonText: "OK",
+            customClass: {
+                content: 'small-swal-content' // Tạo một lớp CSS tên 'small-swal-content'
+            }
+        });
+    } else {
+        const cartHTML = generateCartHTML(cartItems);
+        Swal.fire({
+            title: "Giỏ hàng",
+            html: cartHTML,
+            showCloseButton: true,
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText: "Thanh toán",
+            cancelButtonText: "Tiếp tục mua sắm",
+            customClass: {
+                content: 'small-swal-content'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: "Thanh toán",
+                    text: "Vui lòng chọn phương thức thanh toán",
+                    icon: "info",
+                    showCancelButton: true,
+                    confirmButtonText: "Thanh toán trực tiếp",
+                    showDenyButton: true,
+                    denyButtonText: "Thanh toán chuyển khoản",
+                    cancelButtonText: "Hủy"
+                }).then((paymentResult) => {
+                    if (paymentResult.isConfirmed) {
+                        Swal.fire({
+                            text: "Vui lòng ra quầy thanh toán",
+                            icon: "info"
+                        })
+                    } else if (paymentResult.isDenied) {
+                        // Tạo một phần tử div để chứa cả văn bản và hình ảnh
+                        const contentContainer = document.createElement("div");
+                        contentContainer.classList.add("account-info");
+
+                        // Tạo phần tử văn bản
+                        const textElement = document.createElement("p");
+                        textElement.innerHTML = "Trần Quang Huy<br>9999998888805 - MB";
+                        contentContainer.appendChild(textElement);
+
+                        // Tạo phần tử hình ảnh
+                        const imageElement = document.createElement("img");
+                        imageElement.src = "Images/Ma-QR.png";
+                        imageElement.alt = "Account Image";
+                        imageElement.classList.add("account-image");
+                        contentContainer.classList.add("center-content");
+                        contentContainer.appendChild(imageElement);
+
+                        Swal.fire({
+                            title: "Thông tin",
+                            icon: "info",
+                            html: contentContainer.outerHTML,
+                            confirmButtonText: "Ok",
+                        });
+
+                    }
+                });
+            }
+        });
+    }
+}
+
+function pay() {
+    // Thực hiện các thao tác thanh toán
+
+    // Sau khi thanh toán thành công, đặt lại giỏ hàng
+    resetCart();
 
     Swal.fire({
+        title: "Thanh toán thành công",
+        text: "Cảm ơn bạn đã thanh toán!",
         icon: "success",
-        title: "Giỏ hàng",
-        html: cartContent,
+        confirmButtonText: "OK"
     });
-});
+}
+
+window.onload = function () {
+    localStorage.removeItem("cartItems");
+};

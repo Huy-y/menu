@@ -32,3 +32,24 @@ body {
 .item-name {
     font-size: 16px;
 }
+
+.cart-table {
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+.cart-table th,
+.cart-table td {
+    padding: 8px;
+    border: 1px solid #ccc;
+}
+
+.center-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+}
