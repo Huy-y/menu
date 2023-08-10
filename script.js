@@ -23,6 +23,7 @@ const drinkItems = [
 function createFoodItemCard(item) {
     const card = document.createElement("div");
     card.classList.add(
+        "border-2",
         "menu-item",
         "bg-white",
         "rounded",
@@ -107,6 +108,7 @@ foodItems.forEach((item) => {
 function createDrinkItemCard(item) {
     const card = document.createElement("div");
     card.classList.add(
+        "border-2",
         "menu-item",
         "bg-white",
         "rounded",
@@ -131,7 +133,8 @@ function createDrinkItemCard(item) {
     itemInfo.appendChild(itemName);
 
     const itemPrice = document.createElement("p");
-    itemPrice.textContent = `Giá: ${item.price} VNĐ`;
+    const formattedPrice = item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    itemPrice.textContent = `Giá: ${formattedPrice} VNĐ`;
     itemPrice.classList.add("item-price", "text-gray-600", "mt-2");
     itemInfo.appendChild(itemPrice);
 
@@ -454,3 +457,53 @@ function pay() {
 window.onload = function () {
     localStorage.removeItem("cartItems");
 };
+
+
+const themeToggle = document.getElementById("themeToggle");
+
+// Sử dụng biến cờ để theo dõi trạng thái giao diện
+let isDarkMode = false;
+
+// Hàm để thay đổi giao diện
+function toggleTheme() {
+    const body = document.body;
+    const tab = document.getElementById("tab");
+    if (isDarkMode) {
+        body.classList.remove("dark-mode");
+        tab.classList.remove("dark-mode");
+    } else {
+        body.classList.add("dark-mode");
+        tab.classList.add("dark-mode");
+    }
+    isDarkMode = !isDarkMode;
+}
+
+// Bắt sự kiện nhấn nút để thay đổi giao diện
+themeToggle.addEventListener("click", toggleTheme);
+
+
+// Hàm kiểm tra thời gian để xác định chế độ giao diện
+function updateInterfaceMode() {
+    const now = new Date();
+    const currentHour = now.getHours();
+
+    const body = document.querySelector("body");
+
+    if (currentHour >= 18 || currentHour < 6) {
+        // Thời gian từ 18h tối đến 6h sáng, sử dụng Dark Mode
+        body.classList.add("dark-mode");
+        body.classList.remove("light-mode");
+        tab.classList.add("dark-mode");
+    } else {
+        // Các thời gian khác, sử dụng Light Mode
+        body.classList.add("light-mode");
+        body.classList.remove("dark-mode");
+        tab.classList.remove("dark-mode");
+    }
+}
+
+// Gọi hàm để cập nhật giao diện ban đầu
+updateInterfaceMode();
+
+// Cập nhật giao diện theo thời gian
+setInterval(updateInterfaceMode, 60000); // Cập nhật mỗi phút
