@@ -3,6 +3,11 @@ const foodItems = [
     { name: "Mì Quảng", price: 50000, image: "./Images/Mi-quang-ha-noi-2.jpg" },
     { name: "Bánh Mì", price: 20000, image: "./Images/banh-mi.jpg" },
     { name: "Phở", price: 45000, image: "./Images/pho-bo-ha-noi.jpeg" },
+    { name: "Mỳ", price: 45000, image: "./Images/pho-bo-ha-noi.jpeg" },
+    { name: "Tôm", price: 45000, image: "./Images/pho-bo-ha-noi.jpeg" },
+    { name: "Cá", price: 45000, image: "./Images/pho-bo-ha-noi.jpeg" },
+    { name: "Chim", price: 45000, image: "./Images/pho-bo-ha-noi.jpeg" },
+
     // Thêm các món đồ ăn khác ở đây
 ];
 
