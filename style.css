@@ -53,31 +53,3 @@ body {
     flex-direction: column;
     height: 100%;
 }
-
-/* Giao diện tối */
-.dark-mode {
-    background-color: #333c47;
-    color: #fff;
-    border-color: #ffcc00;
-}
-
-.dark-mode .menu-item {
-    background-color: #333c47;
-    color: #fff;
-    border-color: #ffcc00;
-}
-
-/* Giao diện tối cho tên món ăn */
-.dark-mode .item-name {
-    color: #ffcc00;
-}
-
-/* Giao diện tối cho phần giá */
-.dark-mode .item-price {
-    color: #fff;
-}
-
-/* Giao diện sáng cho phần giá */
-.light-mode .item-price {
-    color: #000;
-}
