@@ -376,7 +376,7 @@ function showCart() {
 
                         // Tạo phần tử văn bản
                         const textElement = document.createElement("p");
-                        textElement.innerHTML = "Trần Quang Huy<br>9999998888805 - MB";
+                        textElement.innerHTML = "Trần Quang Huy<br><span class='account-number'>9999998888805</span> - MB";
                         contentContainer.appendChild(textElement);
 
                         // Tạo phần tử hình ảnh
@@ -394,7 +394,38 @@ function showCart() {
                             confirmButtonText: "Ok",
                         });
 
+                        // Thêm chức năng sao chép khi người dùng bấm vào số tài khoản
+                        const accountNumberElement = document.querySelector(".account-number");
+                        const clipboard = new ClipboardJS(accountNumberElement, {
+                            text: function (trigger) {
+                                return trigger.textContent;
+                            }
+                        });
+
+                        clipboard.on("success", function (e) {
+                            Swal.fire({
+                                title: "Đã sao chép",
+                                text: "Số tài khoản đã được sao chép.",
+                                icon: "success",
+                                confirmButtonText: "OK",
+                            });
+                        });
+
+                        clipboard.on("error", function (e) {
+                            console.error("Lỗi khi sao chép: ", e);
+                            Swal.fire({
+                                title: "Lỗi",
+                                text: "Đã xảy ra lỗi khi sao chép.",
+                                icon: "error",
+                                confirmButtonText: "OK",
+                            });
+                        });
+
+                        accountNumberElement.addEventListener("click", function () {
+                            clipboard.onClick({ currentTarget: accountNumberElement });
+                        });
                     }
+
                 });
             }
         });
