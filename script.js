@@ -513,6 +513,3 @@ function updateInterfaceMode() {
 
 // Gọi hàm để cập nhật giao diện ban đầu
 updateInterfaceMode();
-
-// Cập nhật giao diện theo thời gian
-setInterval(updateInterfaceMode, 60000); // Cập nhật mỗi phút

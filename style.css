@@ -75,17 +75,14 @@ body {
     border-color: #ffcc00;
 }
 
-/* Giao diện tối cho tên món ăn */
 .dark-mode .item-name {
     color: #ffcc00;
 }
 
-/* Giao diện tối cho phần giá */
-.dark-mode .item-price {
+.dark-mode .menu-item .item-price {
     color: #fff;
 }
 
-/* Giao diện sáng cho phần giá */
 .light-mode .item-price {
     color: #000;
 }
